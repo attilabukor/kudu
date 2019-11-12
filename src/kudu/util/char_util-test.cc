@@ -20,12 +20,15 @@
 #include <cstdint>
 #include <memory>
 
+#include <glog/logging.h>
 #include <gtest/gtest.h>
 
 #include "kudu/util/env.h"
 #include "kudu/util/faststring.h"
+#include "kudu/util/init.h"
 #include "kudu/util/path_util.h"
 #include "kudu/util/slice.h"
+#include "kudu/util/status.h"
 #include "kudu/util/test_util.h"
 
 namespace kudu {
@@ -36,6 +39,9 @@ class CharUtilTest : public KuduTest {
   Slice data_ascii_;
 
   void SetUp() override {
+    // UTF8Truncate uses SSE4.1 instructions so we need to make sure the CPU
+    // running the test has these opcodes.
+    CHECK_OK(CheckCPUFlags());
     Env* env = Env::Default();
     ReadFileToString(env, JoinPathSegments(GetTestExecutableDirectory(),
                                            "testdata/char_truncate_utf8.txt"),
@@ -84,12 +90,22 @@ ptr = Truncate(data_ascii_, 10549, &result); ASSERT_EQ(10549, result.size());
 
 TEST_F(CharUtilTest, CorrectnessTestIncompleteUtf8) {
   Slice result;
-  Slice test_data;
-
-  test_data = "aaaa\xf3";
+  Slice test_data = "aaaa\xf3";
 
   auto ptr = Truncate(test_data, 5, &result);
   ASSERT_EQ(test_data, result);
+}
+
+TEST_F(CharUtilTest, CorrectnessTestUtf8AndAscii) {
+  Slice result;
+  Slice data = "ááááááááááááááááááááááááááááááááaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+  auto ptr = Truncate(data, 64, &result);
+  ASSERT_EQ(data, result);
+
+  data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaáááááááááááááááááááááááááááááááá";
+  ptr = Truncate(data, 64, &result);
+  ASSERT_EQ(data, result);
 }
 
 TEST_F(CharUtilTest, StressTestUtf8) {
