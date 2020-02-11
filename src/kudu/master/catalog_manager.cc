@@ -106,6 +106,7 @@
 #include "kudu/master/master.pb.h"
 #include "kudu/master/master_cert_authority.h"
 #include "kudu/master/placement_policy.h"
+#include "kudu/master/ranger_authz_provider.h"
 #include "kudu/master/sentry_authz_provider.h"
 #include "kudu/master/sys_catalog.h"
 #include "kudu/master/table_metrics.h"
@@ -750,8 +751,14 @@ CatalogManager::CatalogManager(Master* master)
       leader_ready_term_(-1),
       hms_notification_log_event_id_(-1),
       leader_lock_(RWMutex::Priority::PREFER_WRITING) {
-  if (SentryAuthzProvider::IsEnabled()) {
+  if (SentryAuthzProvider::IsEnabled() &&
+      RangerAuthzProvider::IsEnabled()) {
+    LOG(FATAL) << "Ranger and Sentry authorization cannot be enabled at the "
+                  "same time.";
+  } else if (SentryAuthzProvider::IsEnabled()) {
     authz_provider_.reset(new SentryAuthzProvider(master_->metric_entity()));
+  } else if (RangerAuthzProvider::IsEnabled()) {
+    authz_provider_.reset(new RangerAuthzProvider());
   } else {
     authz_provider_.reset(new DefaultAuthzProvider);
   }
