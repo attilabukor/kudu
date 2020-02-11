@@ -131,7 +131,7 @@ Status SubprocessServer::Execute(SubprocessRequestPB* req,
 }
 
 void SubprocessServer::Shutdown() {
-  if (closing_) {
+  if (closing_ || !process_->IsStarted()) {
     return;
   }
   // Stop further work from happening by killing the subprocess and shutting
