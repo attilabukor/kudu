@@ -284,10 +284,10 @@ Status KuduPartialRow::SetInt64(const Slice& col_name, int64_t val) {
   return Set<TypeTraits<INT64> >(col_name, val);
 }
 Status KuduPartialRow::SetUnixTimeMicros(const Slice& col_name, int64_t micros_since_utc_epoch) {
-  return Set<TypeTraits<UNIXTIME_MICROS> >(col_name, micros_since_utc_epoch);
+  return Set<TypeTraits<UNIXTIME_MICROS>>(col_name, micros_since_utc_epoch);
 }
 Status KuduPartialRow::SetDate(const Slice& col_name, int32_t days_since_unix_epoch) {
-  return Set<TypeTraits<DATE> >(col_name, days_since_unix_epoch);
+  return Set<TypeTraits<DATE>>(col_name, days_since_unix_epoch);
 }
 Status KuduPartialRow::SetFloat(const Slice& col_name, float val) {
   return Set<TypeTraits<FLOAT> >(col_name, val);
@@ -316,11 +316,11 @@ Status KuduPartialRow::SetInt64(int col_idx, int64_t val) {
   return Set<TypeTraits<INT64> >(col_idx, val);
 }
 Status KuduPartialRow::SetUnixTimeMicros(int col_idx, int64_t micros_since_utc_epoch) {
-  return Set<TypeTraits<UNIXTIME_MICROS> >(col_idx, micros_since_utc_epoch);
+  return Set<TypeTraits<UNIXTIME_MICROS>>(col_idx, micros_since_utc_epoch);
 }
 Status KuduPartialRow::SetDate(int col_idx, int32_t days_since_unix_epoch) {
   RETURN_NOT_OK(CheckDateValueInRange(col_idx, days_since_unix_epoch, *schema_));
-  return Set<TypeTraits<DATE> >(col_idx, days_since_unix_epoch);
+  return Set<TypeTraits<DATE>>(col_idx, days_since_unix_epoch);
 }
 Status KuduPartialRow::SetFloat(int col_idx, float val) {
   return Set<TypeTraits<FLOAT> >(col_idx, val);
@@ -709,11 +709,10 @@ Status KuduPartialRow::GetInt64(const Slice& col_name, int64_t* val) const {
 }
 Status KuduPartialRow::GetUnixTimeMicros(const Slice& col_name,
                                          int64_t* micros_since_utc_epoch) const {
-  return Get<TypeTraits<UNIXTIME_MICROS> >(col_name, micros_since_utc_epoch);
+  return Get<TypeTraits<UNIXTIME_MICROS>>(col_name, micros_since_utc_epoch);
 }
-Status KuduPartialRow::GetDate(const Slice& col_name,
-                               int32_t* days_since_unix_epoch) const {
-  return Get<TypeTraits<DATE> >(col_name, days_since_unix_epoch);
+Status KuduPartialRow::GetDate(const Slice& col_name, int32_t* days_since_unix_epoch) const {
+  return Get<TypeTraits<DATE>>(col_name, days_since_unix_epoch);
 }
 Status KuduPartialRow::GetFloat(const Slice& col_name, float* val) const {
   return Get<TypeTraits<FLOAT> >(col_name, val);
@@ -758,10 +757,10 @@ Status KuduPartialRow::GetInt64(int col_idx, int64_t* val) const {
   return Get<TypeTraits<INT64> >(col_idx, val);
 }
 Status KuduPartialRow::GetUnixTimeMicros(int col_idx, int64_t* micros_since_utc_epoch) const {
-  return Get<TypeTraits<UNIXTIME_MICROS> >(col_idx, micros_since_utc_epoch);
+  return Get<TypeTraits<UNIXTIME_MICROS>>(col_idx, micros_since_utc_epoch);
 }
 Status KuduPartialRow::GetDate(int col_idx, int32_t* days_since_unix_epoch) const {
-  return Get<TypeTraits<DATE> >(col_idx, days_since_unix_epoch);
+  return Get<TypeTraits<DATE>>(col_idx, days_since_unix_epoch);
 }
 Status KuduPartialRow::GetFloat(int col_idx, float* val) const {
   return Get<TypeTraits<FLOAT> >(col_idx, val);

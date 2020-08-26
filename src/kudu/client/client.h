@@ -1152,6 +1152,7 @@ class KUDU_EXPORT KuduTable : public sp::enable_shared_from_this<KuduTable> {
   /// There are no guarantees on the stability of this client API.
   ///
   ///@{
+
   /// Create a new IN Bloom filter predicate using direct BlockBloomFilter
   /// pointers which can be used for scanners on this table.
   ///
@@ -1168,6 +1169,8 @@ class KUDU_EXPORT KuduTable : public sp::enable_shared_from_this<KuduTable> {
   /// Users are expected to perform further filtering to guard against false
   /// positives and automatic disablement of an ineffective Bloom filter
   /// predicate to get precise set membership information.
+  ///
+  /// @warning Unstable API
   ///
   /// @param [in] col_name
   ///   Name of the column to which the predicate applies.
