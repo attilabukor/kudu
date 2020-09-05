@@ -33,7 +33,8 @@ To edit or update this document, edit `RELEASING.adoc` in `master`.
 
 . *A week before branching*: send an email to dev@kudu.apache.org to
   announce that the branch will be happening, including a deadline for when new
-  commits will need gatekeeper approval.
+  commits will need gatekeeper approval. Start collecting release notes,
+  preferably in a shared document like Google Docs.
 
 . *A day before branching*: send another email to dev@kudu.apache.org
   to warn about it.
@@ -90,6 +91,11 @@ To edit or update this document, edit `RELEASING.adoc` in `master`.
      page in your favorite browser.
 
 . As needed, patches can be cherry-picked to the new branch.
+
+. Copy the collected release notes to docs/release_notes.adoc and submit it for
+  review in the newly created branch adding people who helped collecting the
+  release notes and people who contributed patches featured in the release notes
+  as reviewers to give them a chance to rephrase the notes if needed.
 
 == Updating Versions in Master
 
@@ -175,10 +181,12 @@ To edit or update this document, edit `RELEASING.adoc` in `master`.
   The idea is making all examples use the artifacts of the newly released
   `1.x.y` version of Kudu.
 
-. When ready, create a new lightweight tag and push it to the Apache Git repository.
+. Merge the release notes.
+
+. When ready, create a new signed tag and push it to the Apache Git repository.
 +
 ----
-  git tag 1.x.y-RC1
+  git tag -s 1.x.y-RC1 -m "First release candidate of Kudu 1.x.y"
   git push apache 1.x.y-RC1
 ----
 
@@ -240,35 +248,32 @@ To edit or update this document, edit `RELEASING.adoc` in `master`.
   set -o history
 ----
 +
-NOTE: If the binary test JAR artifacts are deployed by the same person and from the
-same machine as the Java Maven artifacts, they should appear in the same
-staging repository. Otherwise, they will create a separate Maven staging
-repository, which is not a problem.
+TIP: Collect the test linux and osx versions of binary JARs on the same machine
+and submit them together so they end up in the same staging repository (which
+will still be a new repository instead of the one with the regular artifacts).
 +
 TIP: To publish an artifact outside of the `build/mini-cluster` directory, e.g.
 if JAR was built by someone else or for another OS, pass the
 `-j=directory_name` argument to the publishing script to specify the location
 of the JAR file to sign and publish.
 
-. Close the Maven staging repository (or repositories).
-+
-Go to the link:https://repository.apache.org/[repository manager] and log
-into the repository server using your Apache credentials. Make sure to enable
-Adobe Flash in your browser for this Web site. Now, go the
-link:https://repository.apache.org/\#stagingRepositories[staging repository]
-and look for ‘orgapachekudu-####’ in the staging repositories list. You can
-check the `Content` tab at the bottom to make sure you have all of the
-expected stuff (client, various integrations, etc.). Hit the checkbox next to
-your new staging repo and hit `Close`. Enter something similar to
-"Apache Kudu 1.x.y-RC1" into the description box and confirm. Wait a minute
-or two and hit `Refresh`, and your staging repo should now have a URL shown
-in its summary tab
-(e.g. `https://repository.apache.org/content/repositories/orgapachekudu-1005`)
+. Close the Maven staging repository (or repositories). Go to the
+  link:https://repository.apache.org/[repository manager] and log into the
+  repository server using your Apache credentials. Now, go the
+  link:https://repository.apache.org/\#stagingRepositories[staging repository]
+  and look for ‘orgapachekudu-####’ in the staging repositories list. You can
+  check the `Content` tab at the bottom to make sure you have all of the
+  expected stuff (client, various integrations, etc.). Hit the checkbox next to
+  your new staging repo and hit `Close`. Enter something similar to "Apache Kudu
+  1.x.y-RC1" into the description box and confirm. Wait a minute or two and hit
+  `Refresh`, and your staging repo should now have a URL shown in its summary
+  tab (e.g.
+  `https://repository.apache.org/content/repositories/orgapachekudu-1005`)
 
 == Initiating a Vote for an RC
 
 . Send an email to dev@kudu.apache.org to start the RC process, using this
-  link:http://mail-archives.apache.org/mod_mbox/kudu-dev/201606.mbox/%3CCAGpTDNduoQM0ktuZc1eW1XeXCcXhvPGftJ%3DLRB8Er5c2dZptvw%40mail.gmail.com%3E[example]
+  link:https://lists.apache.org/thread.html/r62b332b42d24b13173fe49648b220e03504d710f8b813f8837737fb9%40%3Cdev.kudu.apache.org%3E[example]
   as a template.
 
 . Reminder that voting on a release requires a
